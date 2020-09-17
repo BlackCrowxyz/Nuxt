@@ -18,10 +18,12 @@
       <div class="col-2" />
       <div class="col-7">
         <!-- Searchbar -->
-        <Searchbar />
+        <Searchbar :cities="loadedCities" />
       </div>
       <div class="col-3"></div>
     </div>
+
+    <div>{{this.$store.getters.getCities}}</div>
   </div>
 </template>
 
@@ -30,6 +32,18 @@ import Searchbar from "@/components/Searchbar/Searchbar";
 export default {
   components: {
     Searchbar,
+  },
+  data() {
+    return {
+      loadedCities: [],
+    };
+  },
+  created() {
+    const api = "https://1stquest.com/api/plan/v1/cities";
+    this.$store.dispatch("asyncGetCities", api);
+  },
+  beforeUpdate() {
+    this.loadedCities = this.$store.getters.getCities;
   },
 };
 </script>

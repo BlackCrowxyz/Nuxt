@@ -2,7 +2,7 @@
   <div class="row">
     <div class="p-1">
       <!-- Destinations -->
-      <DdTags />
+      <DdTags :data="cities" />
     </div>
     <div class="p-1">
       <!-- Calendar -->
@@ -36,6 +36,12 @@ export default {
     DdCalender,
     DdTags,
     DdSimple,
+  },
+  props: {
+    cities: {
+      type: Array,
+      default: [],
+    },
   },
 };
 </script>
