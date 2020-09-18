@@ -31,7 +31,6 @@
 
 <script>
 export default {
-  // :class="{btnLight: selected[idx], btnPrimary: !selected[idx]}"
   data() {
     return {
       months: [

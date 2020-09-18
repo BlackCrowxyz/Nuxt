@@ -33,11 +33,6 @@ export default {
     thingsToDo: String,
     images: Array,
   },
-  //   computed: {
-  //     firstImages() {
-  //       return this.images.splice(3);
-  //     },
-  //   },
 };
 </script>
 
