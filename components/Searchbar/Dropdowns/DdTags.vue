@@ -10,10 +10,10 @@
         <span v-if="sel">{{data[i]}},</span>
       </span>
     </button>
-    <button v-else class="btn btn-sm btn-light" type="button" data-toggle="dropdown">All data</button>
+    <button v-else class="btn btn-sm btn-light" type="button" data-toggle="dropdown">Destinations</button>
 
     <div class="dropdown-menu float-left p-2">
-      <div v-if="isAnySelected">
+      <div v-show="isAnySelected">
         <span v-for="(sel, i) in selected" :key="i" class="badge badge-dark p-1 m-1">
           <span v-if="sel">
             <span>
@@ -67,9 +67,16 @@ export default {
       if (!this.selected.some((e) => e == true)) this.isAnySelected = false;
     },
     removeSelections() {
-      this.selected = this.selected.map((e) => (e = false));
+      this.selected = [];
       this.isAnySelected = false;
     },
+  },
+  beforeMount() {
+    this.selected = this.$store.getters.getSelectedCities;
+    this.isAnySelected = this.selected.length == 0 ? false : true;
+  },
+  beforeDestroy() {
+    this.$store.dispatch("setSelectedCities", this.selected);
   },
 };
 </script>

@@ -6,7 +6,7 @@
       type="button"
       data-toggle="dropdown"
     >
-      <span v-for="(sel, i) in selected" :key="i" class="small">
+      <span v-for="(sel, i) in selectedMonths" :key="i" class="small">
         <span v-if="sel">{{months[i]}},</span>
       </span>
     </button>
@@ -18,7 +18,7 @@
         class="col-3 p-1 m-1 btn btn-sm"
         @click.stop
         @click="updateSelected(idx)"
-        :class="{'btn-primary': selected[idx], 'btn-light': !selected[idx]}"
+        :class="{'btn-primary': selectedMonths[idx], 'btn-light': !selectedMonths[idx]}"
       >{{month}}</div>
       <div class="text-right p-2">
         <button class="btn btn-sm btn-light" type="button" @click="removeSelections">cancel</button>
@@ -49,33 +49,28 @@ export default {
         "Dec",
       ],
       isAnySelected: false,
-      selected: [
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-      ],
+      selectedMonths: [],
     };
   },
   methods: {
     updateSelected(idx) {
-      this.selected[idx] = !this.selected[idx];
+      this.selectedMonths[idx] = !this.selectedMonths[idx];
       this.isAnySelected = false; // Dummy change to make vue update the v-if statement !
       this.isAnySelected = true;
-      if (!this.selected.some((e) => e == true)) this.isAnySelected = false;
+      if (!this.selectedMonths.some((e) => e == true))
+        this.isAnySelected = false;
     },
     removeSelections() {
-      this.selected = this.selected.map((e) => (e = false));
+      this.selectedMonths = this.selectedMonths.map((e) => (e = false));
       this.isAnySelected = false;
     },
+  },
+  beforeMount() {
+    this.selectedMonths = this.$store.getters.getSelectedMonths;
+    this.isAnySelected = this.selectedMonths.some((i) => i == true);
+  },
+  beforeDestroy() {
+    this.$store.dispatch("setSelectedMonths", this.selectedMonths);
   },
 };
 </script>

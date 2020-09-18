@@ -5,7 +5,7 @@
       class="btn btn-sm btn-light"
       type="button"
       data-toggle="dropdown"
-    >ALL Options</button>
+    >All {{name}}s</button>
     <button v-else class="btn btn-sm btn-primary" type="button" data-toggle="dropdown">{{choice}}</button>
     <div class="dropdown-menu float-left">
       <label
@@ -27,16 +27,12 @@
 
 <script>
 export default {
+  props: {
+    name: String,
+    choices: Array,
+  },
   data() {
     return {
-      choices: [
-        "option 1",
-        "option 2",
-        "option 3",
-        "option 4",
-        "option 5",
-        "option 6",
-      ],
       isAnySelected: false,
       selected: [],
       choice: "",
@@ -44,11 +40,17 @@ export default {
   },
   methods: {
     updateSelected(idx) {
-      this.selected = this.choices.map((e) => {
-        return false;
-      });
-      this.selected[idx] = true;
-      this.choice = this.choices[idx];
+      if (this.selected[idx]) {
+        //were selected before
+        this.selected[idx] = false;
+        this.choice = "";
+      } else {
+        this.selected = this.choices.map((e) => {
+          return false;
+        });
+        this.selected[idx] = true;
+        this.choice = this.choices[idx];
+      }
       this.isAnySelected = false; // Dummy change to make vue update the v-if statement !
       this.isAnySelected = true;
       if (!this.selected.some((e) => e == true)) this.isAnySelected = false;
@@ -58,7 +60,18 @@ export default {
       this.isAnySelected = false;
       this.choice = "";
     },
-  }
+  },
+  beforeMount() {
+    let func = "this.$store.getters.getSelected" + this.name;
+    this.selected = eval(func); //window[func] didn't work
+    this.isAnySelected = this.selected == "" ? false : true;
+    //find the selected item in the choice list
+    let idx = this.selected.indexOf(true);
+    this.choice = this.choices[idx];
+  },
+  beforeDestroy() {
+    this.$store.dispatch("setSelected" + this.name, this.selected);
+  },
 };
 </script>
 
